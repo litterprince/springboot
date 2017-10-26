@@ -1,0 +1,76 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="../layui/css/layui.css" media="all"/>
+<form class="layui-form" style="margin-top:20px;margin-right:20px">
+    <input type="hidden" name="id" th:value="${user.id}" th:if="${not #strings.isEmpty(user)}" autocomplete="off"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号</label>
+        <div class="layui-input-block">
+            <input type="text" name="userName" th:value="${user.userName}" th:if="${not #strings.isEmpty(user)}" required  lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block">
+            <input type="text" name="password" th:value="${user.password}" th:if="${not #strings.isEmpty(user)}" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="realName" th:value="${user.realName}" th:if="${not #strings.isEmpty(user)}" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-block">
+            <input type="radio" name="sex" value="男" title="男" th:checked="(${user.sex} == '男')" th:if="${not #strings.isEmpty(user)}">
+            <input type="radio" name="sex" value="女" title="女" th:checked="(${user.sex} == '女')" th:if="${not #strings.isEmpty(user)}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="btn_submit" class="layui-btn" lay-submit lay-filter="updateUser">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <button id="btn_close" type="button" class="layui-btn layui-btn-primary">关闭</button>
+        </div>
+    </div>
+</form>
+
+<script src="../layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use('form', function(){
+        var form = layui.form
+            ,$ = layui.jquery;
+
+        //监听提交
+        form.on('submit(updateUser)', function(data){
+            var param = JSON.stringify(data.field);
+            $.post('/users/update', eval("(" + param + ")"), function(msg){
+                    if(msg.result == '1'){
+                        layer.msg('成功', {icon: 1, time: 1000}, function(){
+                            closeWin();
+                        });
+                    }else{
+                        layer.msg('失败', {icon: 5, time: 1000});
+                    }
+                }
+            );
+            return false;
+        });
+
+        //关闭按钮
+        $("#btn_close").on('click', function () {
+            closeWin();
+        });
+
+        //关闭弹出层
+        function closeWin(){
+            //当你在iframe页面关闭自身时
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+        }
+
+        //重新渲染form
+        form.render();
+    });
+</script>
