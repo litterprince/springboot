@@ -13,10 +13,10 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="example1" target="1.8" />
+      <module name="example1" target="1.7" />
       <module name="example2" target="1.8" />
-      <module name="example3" target="1.8" />
-      <module name="example4" target="1.8" />
+      <module name="example3" target="1.7" />
+      <module name="example4" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
