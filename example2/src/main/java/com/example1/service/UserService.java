@@ -1,6 +1,5 @@
 package com.example1.service;
 
-import com.example1.mappercluster.UserMapperC;
 import com.example1.mapper.UserMapper;
 import com.example1.mapper.UserXmlMapper;
 import com.example1.po.UserBean;
@@ -18,16 +17,14 @@ public class UserService {
     @Autowired
     UserMapper userMapper;
     @Autowired
-    UserMapperC userMapperC;
-    @Autowired
     UserXmlMapper userXmlMapper;
 
     public List<UserBean> getAll(){
-        return userMapperC.getAll();
+        return userMapper.getAll();
     }
 
     public int getCount(){
-        return userMapperC.getCount();
+        return userMapper.getCount();
     }
 
     public UserBean getOne(String id){

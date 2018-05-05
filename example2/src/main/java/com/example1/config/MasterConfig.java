@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
@@ -23,7 +23,9 @@ public class MasterConfig {
     private Environment env;
 
     public static final String PACKAGE = "com.example1.mapper";
-    public static final String MAPPER_LOCATION = "classpath:mybatis/mapper/**/*.xml";
+    public static final String ENTITY_PACKAGE = "com.example1.po";
+    private static final String MYBATIS_CONFIG = "mybatis/mybatis-config.xml";
+    public static final String MAPPER_LOCATION = "mybatis/mapper/**/*.xml";
 
     @Bean(name="masterDataSource")
     @Primary
@@ -51,9 +53,10 @@ public class MasterConfig {
     @Primary
     public SqlSessionFactory masterSqlSessionFactory(@Qualifier("masterDataSource") DataSource dataSource) throws Exception{
         final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource(MYBATIS_CONFIG));
+        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(MAPPER_LOCATION));
         sqlSessionFactoryBean.setDataSource(dataSource);
-        Resource[] resource = new PathMatchingResourcePatternResolver().getResources(MasterConfig.MAPPER_LOCATION);
-        sqlSessionFactoryBean.setMapperLocations(resource);
+        sqlSessionFactoryBean.setTypeAliasesPackage(ENTITY_PACKAGE);
         return sqlSessionFactoryBean.getObject();
     }
 }
